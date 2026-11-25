@@ -261,3 +261,50 @@ details.rev[open] summary{margin-bottom:8px}
 ::highlight(sr){background-color:var(--mark-soft);color:var(--mark)}
 @media (max-width:900px){.search{margin:4px 0 8px}.search kbd{display:none}}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* ---------- Multiple Choice ---------- */
+.mc-bar{display:grid;gap:12px;margin:18px 0 14px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;max-width:860px}
+.mc-chips{display:flex;flex-wrap:wrap;gap:6px}
+.mc-chip{background:var(--bg);color:var(--ink);border:1px solid var(--line);font-weight:500;font-size:13.5px;padding:5px 11px;border-radius:999px}
+.mc-chip span{font-family:var(--font-num);font-size:12px;color:var(--muted);margin-left:2px}
+.mc-chip:hover{border-color:var(--accent)}
+.mc-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.mc-chip[aria-pressed="true"] span{color:inherit;opacity:.8}
+.mc-opts{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}
+.mc-opts label{display:grid;gap:3px;font-size:12.5px;color:var(--muted)}
+.mc-opts select{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.mc-score{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:860px;position:sticky;top:0;z-index:4;background:var(--bg);padding:8px 0 10px}
+.mc-s{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:grid}
+.mc-s .k{font-size:12px;color:var(--muted)}
+.mc-s .v{font-family:var(--font-num);font-size:22px;font-weight:500;line-height:1.25}
+.mc-s .s{font-size:12px;color:var(--muted)}
+.mc-bar-line{grid-column:1/-1;height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:flex}
+.mc-bar-line i{display:block;height:100%;transition:width .3s}
+.mc-bar-line i.ok{background:var(--ok)}.mc-bar-line i.bad{background:var(--bad)}
+.mc-list{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:12px;max-width:860px}
+.mc-q{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:4px 8px 8px 4px;padding:12px 16px 14px;scroll-margin-top:110px}
+.mc-q.is-ok{border-left-color:var(--ok)}.mc-q.is-bad{border-left-color:var(--bad)}
+.mc-meta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-bottom:4px}
+.mc-meta>span:first-child{font-family:var(--font-num)}
+.mc-tag{color:var(--accent)}
+.mc-text{font-weight:600;margin:0 0 10px;max-width:none}
+.mc-opts-list{display:grid;gap:6px}
+.mc-o{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;align-items:baseline;text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);font-weight:400;line-height:1.4;padding:8px 12px}
+.mc-o b{font-family:var(--font-num);font-size:12.5px;color:var(--muted);font-weight:500}
+.mc-o:hover:not(:disabled){border-color:var(--ink)}
+.mc-o:disabled{cursor:default;opacity:1}
+.mc-o:disabled:not(.ok):not(.bad){opacity:.6}
+.mc-o.ok{background:var(--ok-soft);border-color:var(--ok)}.mc-o.ok b{color:var(--ok)}
+.mc-o.bad{background:var(--bad-soft);border-color:var(--bad)}.mc-o.bad b{color:var(--bad)}
+.mc-why{margin:10px 0 0;font-size:14px;color:var(--muted);max-width:none}
+.mc-why strong{color:var(--ink)}
+.mc-q.is-ok .mc-why strong{color:var(--ok)}.mc-q.is-bad .mc-why strong{color:var(--bad)}
+.mc-empty{padding:16px;background:var(--surface);border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
+.mc-end{margin:16px 0;padding:14px 16px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:8px;max-width:860px}
+.mc-end p{margin:0 0 10px;max-width:none}
+.mc-end-b{display:flex;flex-wrap:wrap;gap:8px}
+.mc-stand{margin-top:22px;max-width:860px}
+.mc-mt td,.mc-mt th{vertical-align:middle}
+.mc-mbar{display:block;width:100%;min-width:90px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.mc-mbar i{display:block;height:100%;background:var(--ok)}
+@media (max-width:600px){.mc-score{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.mc-s{padding:6px 8px}.mc-s .v{font-size:17px}.mc-s .s{display:none}}
+@media (max-width:900px){.mc-score{position:static}}

@@ -8,8 +8,8 @@
 
   /* ---------- Speicher (nur dieser Browser) ---------- */
   var KEY = 'controlling-lernseite-v1';
-  var state = { ex: {}, quiz: {}, plan: {} };
-  try { var raw = JSON.parse(localStorage.getItem(KEY)); if (raw && typeof raw === 'object') { state.ex = raw.ex || {}; state.quiz = raw.quiz || {}; state.plan = raw.plan || {}; } } catch (e) {}
+  var state = { ex: {}, quiz: {}, plan: {}, mcw: {} };
+  try { var raw = JSON.parse(localStorage.getItem(KEY)); if (raw && typeof raw === 'object') { state.ex = raw.ex || {}; state.quiz = raw.quiz || {}; state.plan = raw.plan || {}; state.mcw = raw.mcw || {}; } } catch (e) {}
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
 
   /* ---------- Zahlen einlesen: 1.234,56 / 1234.56 / -35.000 / 9,85 % ---------- */
@@ -277,6 +277,181 @@
       { q: 'Welches EU-Zwischenziel gilt für 2030?', o: ['−40 % gegenüber 1990', '−55 % gegenüber 1990', '−65 % gegenüber 1990', '−90 % gegenüber 1990'], a: 1, w: 'EU-Klimagesetz: mindestens −55 % bis 2030, −90 % bis 2040, Klimaneutralität 2050.' }
     ]
   };
+  /* Zusätzliche Multiple-Choice-Fragen, nur auf der Seite „Multiple Choice“ */
+  var QUIZ_MC = {
+    controlling: [
+      { q: 'Was bedeutet das englische „to control“ laut Skript?', o: ['prüfen und revidieren wie ein Kontrolleur', 'lenken, steuern, im Griff haben, Prozesse regeln', 'Kosten in allen Bereichen senken', 'Bücher führen und abschließen'], a: 1, w: '„Kontrolleur“ ist laut Skript eine falsche Übersetzung. Gemeint ist Steuerung.' },
+      { q: 'Wie lässt sich Controlling als Führungskonzeption kurz umschreiben?', o: ['Revision der Buchhaltung', 'Unternehmenssteuerung durch Zahlen', 'Kostensenkung um jeden Preis', 'Rechtliche Überwachung des Vorstands'], a: 1, w: 'Über Abweichungsanalysen unterstützt es Zielbildungs-, Kontroll- und Informationsprozesse.' },
+      { q: 'Welche Aufgabe liegt laut Skript beim Management und nicht beim Controlling?', o: ['Betriebswirtschaftliche Konzepte erarbeiten', 'Methoden-Know-how liefern', 'Unternehmensziele entwickeln und Wettbewerbsstrategien formulieren', 'DV-Lösungen bereitstellen'], a: 2, w: 'Das Management setzt Ziele und Strategien. Das Controlling liefert Konzepte, Methoden, Auswertungen und Systeme.' },
+      { q: 'Was gehört zum Aufgabenschwerpunkt „Gestaltung des Internen Kontrollsystems“?', o: ['Kapitalbeschaffung', 'Sicherung des Vermögens vor Verlusten', 'Managementinformationssysteme', 'Investitionsplanung'], a: 1, w: 'Zum IKS gehören auch die Ordnungsmäßigkeit der Rechnungslegung und die Einhaltung der Geschäftspolitik.' },
+      { q: 'Welche Tätigkeit nannten Controller in der Umfrage aus dem Skript am häufigsten?', o: ['Reporting', 'Kennzahlenanalyse', 'Kostenrechnung', 'Budgeterstellung und -kontrolle'], a: 1, w: 'Kennzahlenanalyse lag mit 2.116 Nennungen deutlich vorn.' },
+      { q: 'Welche Methode gehört zum strategischen Controlling?', o: ['Budgetierung und Budgetkontrolle', 'Kostenrechnung', 'Portfolio-Analyse', 'Berichtswesen'], a: 2, w: 'Strategisch: Szenario-, Markt-, Wettbewerbs-, Gap- und Portfolio-Analyse, Produktlebenszyklus, Erfahrungskurve.' },
+      { q: 'Welche Aussage trifft auf das operative Controlling zu?', o: ['Es ist primär nach außen auf die Umwelt gerichtet', 'Es verhält sich eher proaktiv', 'Seine Probleme sind strukturiert, konkret und repetitiv', 'Sein Detaillierungsgrad ist grob'], a: 2, w: 'Die anderen drei Merkmale beschreiben das strategische Controlling.' },
+      { q: 'In welchem Controllingprozess liegen Soll-Ist-Vergleich, Abweichungsanalyse und Forecasting?', o: ['Strategische Planung', 'Operative Planung', 'Operative Kontrolle', 'Strategische Kontrolle'], a: 2, w: 'Strategische Kontrolle bedeutet dagegen Strategiereviews, zum Beispiel vierteljährlich.' },
+      { q: 'Was besagt das Minimumprinzip?', o: ['Mit gegebenem Input den größten Output erzielen', 'Einen bestimmten Output mit geringstmöglichem Input erreichen', 'Mit nichts alles erreichen', 'Die Kosten auf null senken'], a: 1, w: 'Das Maximumprinzip ist die Umkehrung. Beides gleichzeitig zu verlangen, ist unmöglich.' },
+      { q: 'Warum widerspricht es dem Gewinnziel, die Liquidität zu maximieren?', o: ['Liquidität erhöht die Steuerlast', 'Liquidität verursacht Opportunitätskosten durch entgangene Zinsen', 'Liquidität ist gesetzlich begrenzt', 'Liquidität senkt die Eigenkapitalquote'], a: 1, w: 'Gehaltene liquide Mittel bringen kaum Ertrag. Nötig ist nur das finanzielle Gleichgewicht.' },
+      { q: 'Was kennzeichnet ein Unternehmen im Unterschied zum öffentlichen Betrieb?', o: ['Organprinzip und Gemeineigentum', 'Autonomieprinzip, erwerbswirtschaftliches Prinzip und Privateigentum', 'Kostendeckungsprinzip', 'Zuschussprinzip und politischer Wirtschaftsplan'], a: 1, w: 'Öffentliche Betriebe folgen dem Organprinzip, dem Kostendeckungs- oder Zuschussprinzip und stehen in Gemeineigentum.' },
+      { q: 'Was ist laut Skript kein Standortfaktor?', o: ['Transportkosten', 'Steuern und Subventionen', 'Staatsleistungen', 'Die Rechtsform'], a: 3, w: 'Die Rechtsformwahl ist eine eigene konstitutive Entscheidung neben der Standortwahl.' },
+      { q: 'Die Wirtschaftlichkeit eines Betriebs beträgt 1,2. Was heißt das?', o: ['Der Output ist 20 % größer als der Input', 'Die Erträge übersteigen die Aufwendungen um 20 %', 'Die Rendite beträgt 20 %', 'Die Kosten sind um 20 % gestiegen'], a: 1, w: 'Wirtschaftlichkeit = Ertrag / Aufwand. Mengen vergleicht dagegen die Produktivität.' },
+      { q: 'Wie beschreibt das Leitbild des ICV die Rolle der Controller gegenüber der Organisation?', o: ['als Kapitän', 'als betriebswirtschaftliches Gewissen', 'als externe Prüfer', 'als Vertreter der Gläubiger'], a: 1, w: 'Sie sind dem Wohl der Organisation als Ganzes verpflichtet.' }
+    ],
+    rechnungswesen: [
+      { q: 'Zuschreibung auf Wertpapiere des Anlagevermögens über 4.000 €. Was liegt vor?', o: ['Einnahme und Ertrag', 'Ertrag, keine Einnahme', 'Einzahlung, kein Ertrag', 'weder Einnahme noch Ertrag'], a: 1, w: 'Nur der Wert des Sachvermögens steigt, das Geldvermögen bleibt gleich.' },
+      { q: 'Verkauf einer Maschine genau zum Buchwert von 2.000 €. Was liegt vor?', o: ['Einnahme, kein Ertrag', 'Ertrag, keine Einnahme', 'Einnahme und Ertrag', 'Aufwand'], a: 0, w: 'Sachvermögen wird zu Geldvermögen. Das Reinvermögen bleibt unverändert.' },
+      { q: 'Abschreibung auf Maschinen über 5.000 €. Was liegt vor?', o: ['Ausgabe und Aufwand', 'Auszahlung, kein Aufwand', 'Aufwand, keine Ausgabe', 'Ausgabe, kein Aufwand'], a: 2, w: 'Werteverzehr ohne Zahlungs- oder Kreditvorgang.' },
+      { q: 'Kauf von Sachvermögen auf Kredit über 10.000 €. Was liegt vor?', o: ['Ausgabe, kein Aufwand', 'Aufwand, keine Ausgabe', 'Auszahlung und Aufwand', 'weder Ausgabe noch Aufwand'], a: 0, w: 'Das Geldvermögen sinkt durch die Verbindlichkeit, das Sachvermögen steigt gleich stark.' },
+      { q: 'Bartilgung eines Kredits über 20.000 €. Was liegt vor?', o: ['Auszahlung und Ausgabe', 'Auszahlung, keine Ausgabe', 'Ausgabe, keine Auszahlung', 'Aufwand'], a: 1, w: 'Die Kasse sinkt, die Verbindlichkeit sinkt genauso. Das Geldvermögen bleibt.' },
+      { q: 'Eine kalkulatorische Abschreibung, die von der bilanziellen abweicht, ist …', o: ['neutraler Aufwand', 'Grundkosten', 'Anderskosten', 'Zusatzerlös'], a: 2, w: 'Anderskosten: Kosten, die in der Finanzbuchhaltung in anderer Höhe erfasst werden.' },
+      { q: 'Zu welcher Bestandsgröße gehören Kosten und Erlöse?', o: ['Zahlungsmittelbestand', 'Geldvermögen', 'Reinvermögen', 'Betriebsnotwendiges Vermögen'], a: 3, w: 'Kosten und Erlöse betreffen nur die eigentliche betriebliche Tätigkeit.' },
+      { q: 'Wer ist der Hauptadressat des internen Rechnungswesens?', o: ['Finanzbehörden', 'Gläubiger', 'Das Management', 'Die Öffentlichkeit'], a: 2, w: 'Das externe Rechnungswesen richtet sich an alle Stakeholder.' },
+      { q: 'Welche Funktion hat der Konzernabschluss?', o: ['Zahlungsbemessung', 'ausschließlich Information', 'Steuerbemessung', 'Ausschüttungsbemessung'], a: 1, w: 'Der Einzelabschluss dient Zahlungsbemessung, Information und Dokumentation.' },
+      { q: 'Wo ist die Maßgeblichkeit der Handelsbilanz für die Steuerbilanz geregelt?', o: ['§ 242 HGB', '§ 275 HGB', '§ 5 Abs. 1 EStG', '§ 161 AktG'], a: 2, w: 'Die Handelsbilanz ist maßgeblich für die Steuerbilanz.' },
+      { q: 'Wo stehen auf einem Aktivkonto die Zugänge?', o: ['im Haben', 'im Soll', 'im Saldo', 'gar nicht, nur in der Bilanz'], a: 1, w: 'Mehrungen stehen auf der Seite des Anfangsbestands. Beim Aktivkonto ist das das Soll.' },
+      { q: 'Welches Konto nennt ein Buchungssatz zuerst?', o: ['Das Haben-Konto', 'Das Soll-Konto', 'Das Konto mit dem höheren Betrag', 'Das Erfolgskonto'], a: 1, w: 'Soll an Haben, dann der Betrag.' },
+      { q: 'Auf welcher Seite des GuV-Kontos steht ein Gewinn als Saldo?', o: ['im Soll', 'im Haben', 'je nach Rechtsform', 'auf beiden Seiten'], a: 0, w: 'Gegengebucht wird er im Haben des Eigenkapitalkontos.' },
+      { q: 'Was setzt das Umsatzkostenverfahren voraus?', o: ['Eine Kapitalflussrechnung', 'Eine Kostenstellen- und Kostenträgerrechnung', 'Eine Plankostenrechnung', 'IFRS-Bilanzierung'], a: 1, w: 'Das UKV gliedert nach Funktionsbereichen. Das GKV kommt ohne diese Rechnungen aus.' },
+      { q: 'Eine Beteiligung mit Buchwert 50.000 € wird für 120.000 € verkauft. Welcher Buchungstyp liegt vor?', o: ['Aktivtausch', 'Ertragsbuchung', 'Gemischte Buchung', 'Bilanzverlängerung'], a: 2, w: '50.000 € Aktivtausch und 70.000 € Ertrag (Fall Edmund AG).' },
+      { q: 'Der Bilanzgewinn wird vollständig in die Gewinnrücklagen eingestellt. Welcher Buchungstyp?', o: ['Aktivtausch', 'Passivtausch', 'Bilanzverkürzung', 'Aufwandsbuchung'], a: 1, w: 'Bilanzgewinn an Gewinnrücklagen: Nur die Passivseite ändert sich.' },
+      { q: 'Welche Aussage trifft auf Fremdkapital zu?', o: ['Der Geber haftet mindestens in Höhe der Einlage', 'Es ist in der Regel zeitlich unbegrenzt verfügbar', 'Die Zinsen sind als Aufwand steuerlich absetzbar', 'Der Geber ist zur Unternehmensleitung berechtigt'], a: 2, w: 'Die übrigen Merkmale beschreiben Eigenkapital.' },
+      { q: 'Wonach sind die Passiva geordnet?', o: ['nach Liquidierbarkeit', 'nach Fristigkeit', 'nach Höhe', 'alphabetisch'], a: 1, w: 'Die Aktiva sind nach Liquidierbarkeit geordnet.' },
+      { q: 'Was hat das BilRUG für die GuV geändert?', o: ['Das GKV ist nicht mehr zulässig', 'Außerordentliche Posten werden nicht mehr gesondert ausgewiesen', 'Steuern gehören ins Finanzergebnis', 'Die GuV ist freiwillig'], a: 1, w: 'Ein separater Ausweis außerordentlicher Positionen ist nicht mehr erlaubt.' }
+    ],
+    kosten: [
+      { q: 'Was passiert mit den fixen Stückkosten, wenn die Menge steigt?', o: ['Sie steigen', 'Sie bleiben gleich', 'Sie sinken', 'Sie werden variabel'], a: 2, w: 'Derselbe Fixkostenblock verteilt sich auf mehr Stück.' },
+      { q: 'Was sind sprungfixe Kosten?', o: ['Kosten, die linear mit der Menge steigen', 'Kosten, die innerhalb bestimmter Intervalle konstant sind und dazwischen springen', 'Kosten, die nur einmal anfallen', 'Kalkulatorische Kosten'], a: 1, w: 'Zum Beispiel eine zusätzliche Maschine ab einer bestimmten Menge.' },
+      { q: 'Womit werden Plankosten bewertet?', o: ['mit historischen Anschaffungspreisen', 'mit erwarteten Wiederbeschaffungspreisen', 'mit Durchschnittswerten der Vergangenheit', 'mit Marktpreisen der Konkurrenz'], a: 1, w: 'Durchschnittsgrößen der Vergangenheit sind Normalkosten.' },
+      { q: 'Wie ermittelt die Inventurmethode den Materialverbrauch?', o: ['Zugang laut Lieferschein', 'Anfangsbestand + Zugang − Endbestand', 'Summe der Entnahmescheine', 'Stückverbrauch laut Stückliste × Menge'], a: 1, w: 'Entnahmescheine: Skontrationsmethode. Stückliste: Rückrechnung.' },
+      { q: 'Welche Methode nutzt die Summe der Materialentnahmescheine?', o: ['Zugangsmethode', 'Inventurmethode', 'Skontrationsmethode', 'Rückrechnung'], a: 2, w: 'Jede Entnahme wird belegt und aufsummiert.' },
+      { q: 'Was leisten Hilfskostenstellen?', o: ['Sie bearbeiten die Hauptprodukte', 'Sie erbringen Leistungen für andere Kostenstellen, zum Beispiel die Kantine', 'Sie verkaufen Nebenprodukte', 'Sie erfassen Einzelkosten'], a: 1, w: 'Ihre Kosten werden als sekundäre Gemeinkosten auf die Hauptkostenstellen umgelegt.' },
+      { q: 'Welches Verfahren der innerbetrieblichen Leistungsverrechnung passt bei gegenseitigem Leistungsaustausch?', o: ['Anbauverfahren', 'Stufenleiterverfahren', 'Simultanes Gleichungsverfahren', 'Divisionskalkulation'], a: 2, w: 'Anbau- und Stufenleiterverfahren unterstellen einen einseitigen Austausch.' },
+      { q: 'Was sind primäre Gemeinkosten?', o: ['Kosten der von außen beschafften Güter', 'Kosten der Hilfskostenstellen', 'Einzelkosten der Fertigung', 'Kalkulatorische Zinsen'], a: 0, w: 'Sie werden im ersten Schritt des BAB auf die Kostenstellen verteilt.' },
+      { q: 'Für welche Produkte passt die Äquivalenzziffernkalkulation?', o: ['Einzelanfertigung im Anlagenbau', 'Verschiedene Biersorten', 'Strom aus einem Kraftwerk', 'Produkte einer Raffinerie'], a: 1, w: 'Sortenfertigung verwandter Produkte. Strom: Division. Raffinerie: Kuppelproduktion.' },
+      { q: 'Wann wird die Restwertmethode angewendet?', o: ['Bei Kuppelproduktion mit einem Hauptprodukt', 'Bei Einzelfertigung', 'Bei Massenproduktion eines Produkts', 'Bei der Bilanzierung von Anlagen'], a: 0, w: 'Die Nettoerlöse der Nebenprodukte werden von den Prozesskosten abgezogen.' },
+      { q: 'Ist die Kostenrechnung gesetzlich vorgeschrieben?', o: ['Ja, nach HGB', 'Ja, nach EStG', 'Nein, sie ist freiwillig', 'Nur für Kapitalgesellschaften'], a: 2, w: 'Sie ist Teil des internen Rechnungswesens.' },
+      { q: 'Ein Produkt hat einen positiven Deckungsbeitrag, aber nach Vollkosten einen Verlust. Was gilt kurzfristig?', o: ['Sofort einstellen', 'Im Programm behalten, weil es zur Deckung der Fixkosten beiträgt', 'Preis auf die Selbstkosten anheben', 'Nur noch auf Lager produzieren'], a: 1, w: 'Die Fixkosten fallen ohnehin an. Langfristig muss der Preis alle Kosten decken.' },
+      { q: 'Wann lohnt ein Zusatzauftrag nach der Deckungsbeitragsrechnung?', o: ['Wenn der Preis über den Selbstkosten liegt', 'Wenn freie Kapazität besteht und der Preis über den variablen Stückkosten liegt', 'Nie unter Listenpreis', 'Wenn die Fixkosten sinken'], a: 1, w: 'Glanz AG: Der Vollkostenrechner lehnt ab, obwohl der Auftrag 10.000 € Deckungsbeitrag bringt.' },
+      { q: 'Warum führen Voll- und Teilkostenrechnung beim Bonbonproduzenten zum gleichen Betriebsergebnis?', o: ['Weil es keine Fixkosten gibt', 'Weil produzierte und abgesetzte Menge gleich sind', 'Weil die Zuschlagssätze gleich sind', 'Weil alle Sorten den gleichen Preis haben'], a: 1, w: 'Ohne Bestandsveränderungen werden in beiden Rechnungen alle Fixkosten der Periode verrechnet.' },
+      { q: 'Welche Grenze hat die Deckungsbeitragsrechnung laut Skript?', o: ['Sie schlüsselt alle Fixkosten', 'Die Beschäftigung ist die einzige Kosteneinflussgröße', 'Sie kennt keine variablen Kosten', 'Sie ist nur für Banken geeignet'], a: 1, w: 'Dazu: statische Betrachtung, undifferenzierter Fixkostenblock, Kostensprünge fehlen.' },
+      { q: 'Der Verkaufspreis steigt, alles andere bleibt gleich. Was passiert mit der Break-even-Menge?', o: ['Sie steigt', 'Sie sinkt', 'Sie bleibt gleich', 'Sie wird negativ'], a: 1, w: 'Die Deckungsspanne wächst, die Fixkosten sind schneller gedeckt.' },
+      { q: 'Welche Frage beantwortet die Kostenstellenrechnung?', o: ['Welche Kosten fallen an?', 'Wo fallen die Kosten an?', 'Wofür fallen die Kosten an?', 'Wann fallen die Kosten an?'], a: 1, w: 'Kostenarten: welche. Kostenträger: wofür.' },
+      { q: 'Wie heißt die Kostenträgerzeitrechnung auch?', o: ['Kalkulation', 'Betriebsergebnisrechnung', 'Betriebsabrechnungsbogen', 'Investitionsrechnung'], a: 1, w: 'Die Kostenträgerstückrechnung ist die Kalkulation.' }
+    ],
+    kapitalfluss: [
+      { q: 'Was zählt zu den Zahlungsmitteläquivalenten?', o: ['Forderungen aus LuL', 'Festgelder und Geldmarktpapiere mit Restlaufzeit unter drei Monaten', 'Aktien im Anlagevermögen', 'Vorräte'], a: 1, w: 'Kurzfristig, äußerst liquide und risikoarm.' },
+      { q: 'Welches Vorzeichen erwartet das Skript beim Cashflow aus Investitionstätigkeit?', o: ['immer positiv', 'negativ oder null', 'genau null', 'gleich dem operativen Cashflow'], a: 1, w: 'Ein wachsendes Unternehmen investiert mehr, als es aus Abgängen einnimmt.' },
+      { q: 'Eine Pensionsrückstellung wird gebildet. Was passiert im indirekten Schema?', o: ['Betrag wird abgezogen', 'Betrag wird addiert', 'Kein Einfluss', 'Betrag geht in die Finanzierung'], a: 1, w: 'Aufwand ohne Auszahlung. Bezahlt wird erst später.' },
+      { q: 'Die Verbindlichkeiten aus LuL sinken. Was passiert im indirekten Schema?', o: ['Betrag wird addiert', 'Betrag wird abgezogen', 'Kein Einfluss', 'Betrag geht in die Investition'], a: 1, w: 'Alte Rechnungen wurden bezahlt: Passiva runter heißt Cash runter.' },
+      { q: 'Die Vorräte sinken. Was passiert im indirekten Schema?', o: ['Betrag wird addiert', 'Betrag wird abgezogen', 'Kein Einfluss', 'Betrag wird halbiert'], a: 0, w: 'Lager wurde abgebaut, gebundenes Geld wird frei: Aktiva runter heißt Cash rauf.' },
+      { q: 'Wohin gehört die Zahlung der Ertragsteuer?', o: ['Laufende Geschäftstätigkeit', 'Investitionstätigkeit', 'Finanzierungstätigkeit', 'Finanzmittelfonds'], a: 0, w: 'So in der Lösung zur Mania AG: −1.000 im operativen Cashflow.' },
+      { q: 'Grundstückskauf über 50.000, 20 % gewährt der Verkäufer als Kredit. Wie hoch ist der Investitions-Cashflow?', o: ['−50.000', '−40.000', '−10.000', '0'], a: 1, w: 'Nur die tatsächlich gezahlten 80 % fließen ab. Der Verkäuferkredit ist kein Zahlungsvorgang.' },
+      { q: 'Kredit über 10.000 mit Ausgabekurs 98 %. Wie hoch ist der Finanzierungs-Cashflow?', o: ['+10.000', '+9.800', '−200', '+200'], a: 1, w: 'Ausgezahlt werden 98 %. Das Disagio ist Aufwand, aber kein Zahlungsvorgang.' },
+      { q: 'Wie werden Investitions- und Finanzierungs-Cashflow ermittelt?', o: ['immer indirekt', 'immer direkt', 'nach Wahl über die GuV', 'gar nicht'], a: 1, w: 'Nur der operative Cashflow wird üblicherweise indirekt aus dem Ergebnis abgeleitet.' },
+      { q: 'Sachanlagen steigen von 900 auf 1.600, Abschreibungen 85. Wie hoch war die Auszahlung für Investitionen?', o: ['700', '615', '785', '1.600'], a: 2, w: 'Zunahme des Buchwerts plus Abschreibungen (Borussen AG).' },
+      { q: 'Wohin gehört eine Kapitalerhöhung gegen Einlage?', o: ['Laufende Geschäftstätigkeit', 'Investitionstätigkeit', 'Finanzierungstätigkeit', 'Sie ist zahlungsunwirksam'], a: 2, w: 'Flash-Cow AG: gezeichnetes Kapital und Kapitalrücklage erhöhen den Finanzierungs-Cashflow.' },
+      { q: 'Jahresüberschuss Vorjahr 700, Zuführung zu den Gewinnrücklagen 590. Wie hoch war die Ausschüttung?', o: ['700', '590', '110', '1.290'], a: 2, w: 'Der Vorjahresgewinn wird entweder einbehalten oder ausgeschüttet.' },
+      { q: 'Was ist keine Aufgabe der Kapitalflussrechnung?', o: ['Fähigkeit zeigen, Zahlungsüberschüsse zu erwirtschaften', 'Divergenzen zwischen Ergebnis und Zahlungen aufdecken', 'Selbstkosten je Stück ermitteln', 'Fähigkeit zeigen, Verbindlichkeiten zu bedienen'], a: 2, w: 'Selbstkosten ermittelt die Kostenträgerrechnung.' },
+      { q: 'Was ist der Ausgangspunkt der indirekten Methode?', o: ['Die Summe der Einzahlungen', 'Das Ergebnis der GuV', 'Der Finanzmittelfonds am Jahresende', 'Der Umsatz'], a: 1, w: 'Vom Ergebnis aus werden alle zahlungsunwirksamen Posten korrigiert.' },
+      { q: 'Wozu dient die Probe am Ende jeder Kapitalflussrechnung?', o: ['Summe der drei Cashflows = Veränderung des Finanzmittelfonds', 'Operativer Cashflow = Jahresüberschuss', 'Investitions-Cashflow = Abschreibungen', 'Finanzierungs-Cashflow = 0'], a: 0, w: 'Flash-Cow AG: 21.450 − 63.350 + 30.150 = −11.750 = Veränderung der liquiden Mittel.' }
+    ],
+    kennzahlen: [
+      { q: 'Warum steht bei der Eigenkapitalrendite das EBT im Zähler?', o: ['Weil Steuern nicht zum Ergebnis gehören', 'Weil die Zinsen den Fremdkapitalgebern zustehen', 'Weil das EBIT nicht berechenbar ist', 'Weil das HGB es vorschreibt'], a: 1, w: 'Den Eigentümern gehört nur, was nach den Zinsen übrig bleibt.' },
+      { q: 'Was steht bei der Gesamtkapitalrendite im Zähler?', o: ['Jahresüberschuss', 'EBT', 'EBIT', 'EBITDA'], a: 2, w: 'Sie misst die Verzinsung für alle Kapitalgeber, also vor Zinsen.' },
+      { q: 'Was verlangt die Goldene Bilanzregel?', o: ['Deckungsgrad B größer 1', 'Eigenkapitalquote größer 50 %', 'Liquidität 1. Grades größer 1', 'Verschuldungsgrad kleiner 1'], a: 0, w: '(EK + langfristiges FK) / AV > 1: Langfristiges Vermögen ist langfristig finanziert.' },
+      { q: 'Wie ist der Verschuldungsgrad definiert?', o: ['EK / FK', 'FK / EK', 'FK / Bilanzsumme', 'AV / EK'], a: 1, w: 'FK / Bilanzsumme ist die Fremdkapitalquote.' },
+      { q: 'Wie berechnet man das Capital Employed passivisch?', o: ['EK + alle Rückstellungen + alle Verbindlichkeiten', 'EK + Pensionsrückstellungen + Finanzschulden', 'Bilanzsumme − EK', 'AV + Vorräte'], a: 1, w: 'Nur das verzinsliche Kapital zählt.' },
+      { q: 'Welche Position gehört nicht zum Capital Employed?', o: ['Eigenkapital', 'Pensionsrückstellungen', 'Finanzschulden', 'Verbindlichkeiten aus LuL'], a: 3, w: 'Lieferantenverbindlichkeiten und sonstige Rückstellungen kosten keine Zinsen.' },
+      { q: 'Wie berechnet man den NOPAT praktisch?', o: ['EBT × (1 − s)', 'EBIT × (1 − s)', 'Jahresüberschuss + Zinsen', 'EBITDA − Steuern'], a: 1, w: 'Gewinn vor Zinsen, nach Steuern ohne Tax Shield.' },
+      { q: 'Was ist das Tax Shield?', o: ['Ein Steuerfreibetrag für Gründer', 'Fremdkapitalzinsen mindern die Steuerlast', 'Eine Rücklage für Steuerschulden', 'Ein Verlustvortrag'], a: 1, w: 'Darum wird r_FK im WACC mit (1 − s) multipliziert.' },
+      { q: 'Was ist im CAPM der risikolose Basiszins?', o: ['Der Leitzins der EZB', 'Die Rendite langfristiger Staatsanleihen höchster Bonität', 'Die Rendite des DAX', 'Der Fremdkapitalzins des Unternehmens'], a: 1, w: 'Zum Beispiel die Rendite langfristiger Bundesanleihen.' },
+      { q: 'r_f = 6 %, erwartete Marktrendite 11 %, Beta 1,8. Wie hoch sind die Eigenkapitalkosten?', o: ['11 %', '15 %', '19,8 %', '9 %'], a: 1, w: '6 % + (11 % − 6 %) × 1,8 = 15 % (ProValue AG).' },
+      { q: 'Was kritisiert das Skript am EVA?', o: ['Er ignoriert den WACC', 'Er hängt an buchhalterischen Zahlen, und die Anpassungen sind nicht normiert', 'Er ist eine relative Kennzahl', 'Er ist nur für Banken geeignet'], a: 1, w: 'Über 200 Conversions, selektiv angewendet („cherry picking“).' },
+      { q: 'Was ist der CFROI?', o: ['eine absolute, gewinnorientierte Kennzahl', 'eine relative, cashflow-basierte Kennzahl', 'ein Liquiditätsgrad', 'ein Multiplikator'], a: 1, w: 'Sein absolutes Gegenstück ist der CVA.' },
+      { q: 'Wie wird die Bruttoinvestitionsbasis praktisch ermittelt?', o: ['Capital Employed + kumulierte Abschreibungen', 'Bilanzsumme − Eigenkapital', 'Anlagevermögen zu Restbuchwerten', 'NOPAT + Abschreibungen'], a: 0, w: 'Das Anlagevermögen zählt zu vollen Anschaffungskosten. NOPAT + Abschreibungen ist der Brutto-Cashflow.' },
+      { q: 'Was ist die ökonomische Abschreibung beim CFROI?', o: ['Die steuerliche AfA', 'Ein konstanter Betrag, der mit Zinseszins die Anschaffungskosten wieder ansammelt', 'Die Summe aller bisherigen Abschreibungen', 'Die Abschreibung auf den Goodwill'], a: 1, w: 'Ansparbetrag über die Nutzungsdauer, verzinst mit dem WACC.' },
+      { q: 'Kurs 100 € zu Jahresbeginn, 120 € am Jahresende, Dividende 5 €. Wie hoch ist der TRS?', o: ['20 %', '25 %', '5 %', '24 %'], a: 1, w: '(120 − 100 + 5) / 100 = 25 %.' },
+      { q: 'Wobei setzt die Balanced Scorecard an?', o: ['Bei der Formulierung der Strategie', 'Bei der Umsetzung der Strategie', 'Bei der Kapitalbeschaffung', 'Beim Jahresabschluss'], a: 1, w: 'Strategien scheitern oft an der Umsetzung, nicht nur am Markt oder am Kapital.' },
+      { q: 'Welcher Nachteil der Balanced Scorecard steht im Skript?', o: ['Sie berücksichtigt nur Finanzkennzahlen', 'Gefahr der „BSC als Sammlung von Kennzahlen“', 'Sie ist gesetzlich vorgeschrieben', 'Sie hat keine Kundenperspektive'], a: 1, w: 'Quantität wird mit Qualität verwechselt.' },
+      { q: 'Womit endet die Ursache-Wirkungs-Kette der Balanced Scorecard?', o: ['Mit befugten Mitarbeitern', 'Mit rechtzeitiger Lieferung', 'Mit Kundenzufriedenheit', 'Mit den Erlösen (Finanzperspektive)'], a: 3, w: 'Potenziale → Prozesse → Kunden → Finanzen.' },
+      { q: 'Die Eigenkapitalquote (EK / GK) ist welche Kennzahlenart?', o: ['Gliederungszahl', 'Beziehungszahl', 'Indexzahl', 'absolute Kennzahl'], a: 0, w: 'Ein Teil wird ins Verhältnis zum Ganzen gesetzt. Der Return on Investment ist eine Beziehungszahl.' },
+      { q: 'Welches Problem hat laut Skript der Unternehmensvergleich?', o: ['Er ist gesetzlich verboten', 'Vergleich von „Schlendrian mit Schlendrian“', 'Er kennt keine Sollwerte', 'Er funktioniert nur mit Planzahlen'], a: 1, w: 'Dazu eingeschränkte Vergleichbarkeit und Probleme bei der Datenbeschaffung.' },
+      { q: 'Wie wirkt die Aktivierung von Entwicklungskosten (§ 248 Abs. 2 HGB) auf den Jahresüberschuss?', o: ['Er sinkt', 'Er steigt', 'Keine Wirkung', 'Nur die Kapitalflussrechnung ändert sich'], a: 1, w: 'Der Aufwand wird zu Vermögen. Euro-Pol GmbH: +4.457 T€.' },
+      { q: 'Wie spotten Börsenaufsichten und Standardsetzer über die vielen EBIT-Varianten?', o: ['„Earnings Before Bad Stuff“', '„Cash is King“', '„Window Dressing“', '„Big Bath“'], a: 0, w: 'Auch „Earnings Before All“.' },
+      { q: 'Warum kann eine klassische Kapitalrendite trotz Verlust positiv sein?', o: ['Weil Steuern erstattet werden', 'Weil Zähler und Nenner beide negativ sein können', 'Weil Abschreibungen addiert werden', 'Das ist unmöglich'], a: 1, w: 'Verlust geteilt durch negatives Eigenkapital ergibt einen positiven Wert.' }
+    ],
+    bewertung: [
+      { q: 'Was ist der Shareholder Value als Finanzgröße?', o: ['Buchwert des Eigenkapitals', 'Marktwert des Eigenkapitals', 'Marktwert des Gesamtkapitals', 'Jahresüberschuss'], a: 1, w: 'Bei börsennotierten Unternehmen die Marktkapitalisierung.' },
+      { q: 'Warum ist das Marktwert-Buchwert-Verhältnis meist größer als eins?', o: ['Weil Schulden zu hoch bilanziert sind', 'Weil materielle und immaterielle Wertzuwächse nicht in der Bilanz stehen', 'Weil der Buchwert Steuern enthält', 'Weil Aktienkurse immer steigen'], a: 1, w: 'Der Buchwert blickt zurück, der Marktwert nach vorn.' },
+      { q: 'Marktwert des Eigenkapitals 200, Kaufpreis 500. Wie hoch ist der Goodwill?', o: ['200', '300', '500', '700'], a: 1, w: 'Kaufpreis minus Marktwert des Eigenkapitals nach Aufdeckung der stillen Reserven (X-AG).' },
+      { q: 'Welche Werte setzt der Substanzwert zu Reproduktionswerten an?', o: ['Liquidationserlöse', 'Wiederbeschaffungswerte', 'Buchwerte', 'Börsenwerte'], a: 1, w: 'Annahme: Das Unternehmen wird nachgebaut.' },
+      { q: 'Wie wird der Liquidationswert ermittelt?', o: ['Barwert der künftigen Cashflows', 'Einzelveräußerungserlöse minus Schulden minus Liquidationskosten', 'Jahresüberschuss × KGV', 'Eigenkapital laut Bilanz'], a: 1, w: 'Annahme: Das Unternehmen wird zerschlagen.' },
+      { q: 'Sicheres Ergebnis 500 pro Jahr, Kalkulationszins 8 %. Wie hoch ist der Ertragswert als ewige Rente?', o: ['4.000', '5.400', '6.250', '40.000'], a: 2, w: '500 / 0,08 = 6.250 (Käufersicht BITA GmbH).' },
+      { q: 'Woraus leitet das Ertragswertverfahren den Kalkulationszins ab?', o: ['Aus dem CAPM', 'Aus der individuell besten alternativen Kapitalanlage', 'Aus dem Leitzins', 'Aus der Umsatzrendite'], a: 1, w: 'DCF-Verfahren nutzen dagegen kapitalmarkttheoretische Modelle.' },
+      { q: 'Worin unterscheidet sich der Flow to Equity vom Free Cash Flow?', o: ['Zinsen, Tilgungen und andere Ansprüche sind schon abgezogen', 'Abschreibungen sind addiert', 'Steuern fehlen', 'Investitionen fehlen'], a: 0, w: 'Der FTE steht nur den Eigentümern zu und ist Basis des Nettoverfahrens.' },
+      { q: 'Zu welcher Gruppe gehört der WACC-Ansatz?', o: ['Nettoverfahren (Equity Approach)', 'Bruttoverfahren (Entity Approach)', 'Einzelbewertungsverfahren', 'Mischverfahren'], a: 1, w: 'Erst wird das ganze Unternehmen bewertet, dann das Fremdkapital abgezogen.' },
+      { q: 'Wie lautet der Terminal Value als wachsende ewige Rente?', o: ['FCF × WACC', 'FCF / (WACC − g)', 'FCF / (WACC + g)', 'FCF × (1 + g)'], a: 1, w: 'Danach noch mit (1 + WACC)^n auf heute abzinsen.' },
+      { q: 'r_EK 8 %, r_FK 4 %, EK-Quote 40 %, Steuersatz 30 %. Wie hoch ist der WACC?', o: ['5,6 %', '4,88 %', '6,4 %', '3,2 %'], a: 1, w: '8 % × 0,4 + 4 % × 0,6 × 0,7 = 3,2 % + 1,68 % = 4,88 % (Aufgabe 10).' },
+      { q: 'Wie lang ist die Detailplanungsphase im Zwei-Phasen-Modell meist?', o: ['1 Jahr', '3 bis 5 Jahre', '10 bis 15 Jahre', 'unbegrenzt'], a: 1, w: 'Danach folgt der Terminal Value.' },
+      { q: 'Worum wird das Ergebnis vor dem Ertragswertverfahren bereinigt?', o: ['Um alle Abschreibungen', 'Um Erfolge des nicht betriebsnotwendigen Vermögens und nicht periodengerechte Erfolge', 'Um die Umsatzerlöse', 'Um die Personalkosten'], a: 1, w: 'Auch um Effekte aus Bilanzierungs- und Bewertungswahlrechten.' },
+      { q: 'Welcher Bewertungsanlass ist unabhängig vom Willen der Eigentümer und ohne Eigentumswechsel?', o: ['Börseneinführung', 'Kauf eines Unternehmens', 'Kreditwürdigkeitsprüfung', 'Eintritt eines Gesellschafters'], a: 2, w: 'Ebenso Sanierung und Steuererklärung.' },
+      { q: 'Wie heißt der Wert, mit dem Käufer und Verkäufer in die Verhandlung gehen?', o: ['Argumentationswert', 'Einigungswert', 'Substanzwert', 'Buchwert'], a: 0, w: 'Den Einigungswert ermittelt zum Beispiel eine Konsortialbank oder ein Berater.' },
+      { q: 'Jahresüberschuss 420, Multiplikator (KGV) 12. Wie hoch ist der Marktwert des Eigenkapitals?', o: ['420', '5.040', '5.250', '35'], a: 1, w: '12 × 420 = 5.040 (BITA GmbH).' },
+      { q: 'Welche Verfahren berücksichtigen Kombinationseffekte (Goodwill oder Badwill)?', o: ['Substanzwertverfahren', 'Liquidationswertverfahren', 'Gesamtbewertungsverfahren', 'Keines'], a: 2, w: 'Einzelbewertungsverfahren addieren nur die Teile.' },
+      { q: 'Welcher Grund für einen Goodwill steht in deiner Mitschrift?', o: ['Synergie-Goodwill: Konzernunternehmen profitieren', 'Abschreibungs-Goodwill', 'Steuer-Goodwill', 'Bilanz-Goodwill'], a: 0, w: 'Außerdem Going-Concern-, Restrukturierungs- und Strategie-Goodwill sowie Überzahlung.' }
+    ],
+    planung: [
+      { q: 'Was kennzeichnet die starre Plankostenrechnung?', o: ['Plankosten für jeden Beschäftigungsgrad', 'Plankosten nur für einen Beschäftigungsgrad, keine Trennung in fix und variabel', 'Nur variable Kosten werden verrechnet', 'Sie liefert Grenzkosten'], a: 1, w: 'Die Abweichung ist deshalb nicht interpretierbar.' },
+      { q: 'Wie berechnet man die Sollkosten?', o: ['Planverrechnungssatz × Istbeschäftigung', 'Fixkosten + variable Plankosten × Ist- / Planbeschäftigung', 'Istkosten − Plankosten', 'Plankosten / Planbeschäftigung'], a: 1, w: 'Die erste Formel ergibt die verrechneten Plankosten.' },
+      { q: 'Wie ist die Verbrauchsabweichung definiert?', o: ['Istkosten − Sollkosten', 'Sollkosten − verrechnete Plankosten', 'Plankosten − Istkosten', 'Sollkosten − Plankosten'], a: 0, w: 'Ursachen: Mehrverbrauch oder höhere Einsatzpreise.' },
+      { q: 'Fixkosten 30.000, variable Plankosten 50.000 bei 1.000 h, Ist 800 h. Wie hoch sind die Sollkosten?', o: ['64.000', '70.000', '80.000', '40.000'], a: 1, w: '30.000 + 50.000 × 800 / 1.000 = 70.000.' },
+      { q: 'Gleiche Zahlen, Plankosten gesamt 80.000. Wie hoch ist die Beschäftigungsabweichung?', o: ['6.000', '8.000', '14.000', '10.000'], a: 0, w: 'Sollkosten 70.000 − verrechnete Plankosten 64.000 = 30.000 × 20 % nicht verrechnete Fixkosten.' },
+      { q: 'Wie ist die Mixabweichung definiert?', o: ['Istkosten − Sollkosten 1', 'Sollkosten 2 (Ist-Mischung) − Sollkosten 1 (Plan-Mischung)', 'Istkosten − Istkosten zu Planpreisen', 'Plankosten − Sollkosten'], a: 1, w: 'In jedem Schritt wird genau eine Größe von Plan auf Ist umgestellt.' },
+      { q: 'Wie ist die Preisabweichung definiert?', o: ['Istkosten − Istkosten zu Planpreisen', 'Sollkosten 2 − Sollkosten 1', 'Istkosten − Sollkosten', 'Istmenge × Planpreis'], a: 0, w: 'Drink Til You Drop AG: 21.503 − 17.814 = 3.689 €.' },
+      { q: 'Welche Rolle hat die Budgetierung laut Skript?', o: ['Teil der strategischen Planung', 'Kernstück der operativen Planung', 'Teil des Jahresabschlusses', 'Ersatz für die Kostenrechnung'], a: 1, w: 'Aufstellung, Abstimmung und Festlegung formalzielorientierter Pläne für eine Periode.' },
+      { q: 'Welche Wirkung soll ein Budget nicht haben?', o: ['Orientierung', 'Anreize', 'Koordination', 'Rechenschaftslegung gegenüber den Aktionären'], a: 3, w: 'Die vierte Wirkung ist die Konzentration auf Schwerpunkte. Rechenschaft leistet der Jahresabschluss.' },
+      { q: 'Welcher Vorteil gehört zum Top-down-Ansatz?', o: ['Kenntnisse vor Ort werden eingebunden', 'Schnelle Ableitung und widerspruchsfreie Ziele', 'Hohe Motivation der Mitarbeiter', 'Stärkere Marktorientierung'], a: 1, w: 'Die anderen drei sind Vorteile des Bottom-up-Ansatzes.' },
+      { q: 'Welcher Nachteil gehört zum Gegenstromverfahren?', o: ['Mangelnde Realitätsnähe', 'Zeitaufwendige iterative Zyklen und Verteilungskämpfe', 'Vergangenheitsorientierung', 'Fehlende strategische Ausrichtung'], a: 1, w: 'Im Konflikt dominiert außerdem die Führungsspitze.' },
+      { q: 'Was zeigt ein Forecast?', o: ['Den Ist-Ist-Vergleich mit dem Vorjahr', 'Den Soll-Wird-Vergleich: aktualisierte Erwartung bis Jahresende', 'Das neue Budget für fünf Jahre', 'Die Abweichung der Vorperiode'], a: 1, w: 'Das Budget bleibt, die Erwartung wird unterjährig fortgeschrieben.' },
+      { q: 'Was kennzeichnet Beyond Budgeting?', o: ['Detailliertere Budgets', 'Relative Zielvorgaben und individuelle Leistungsanreize statt Budgets', 'Budgetierung alle drei bis vier Jahre bei null', 'Bisherige Strukturen bleiben erhalten'], a: 1, w: 'Better Budgeting behält die Strukturen bei. Zero Base Budgeting startet bei null.' },
+      { q: 'Womit beginnt die Sachzielplanung?', o: ['Mit der Finanzplanung', 'Mit der Absatzplanung', 'Mit der Beschaffungsplanung', 'Mit der Personalplanung'], a: 1, w: 'Absatz → Fertigungsprogramm → Fertigungsablauf → Beschaffung.' },
+      { q: 'Wie wird bei der Bicycle AG der Wertpapierkauf bestimmt?', o: ['Er ist vorgegeben', 'Als Restgröße: alles über dem optimalen Kassenbestand', 'Aus dem Jahresüberschuss', 'Aus den Abschreibungen'], a: 1, w: 'Liquide Mittel 208.000 − Zielbestand 100.000 = 108.000 € Wertpapiere.' },
+      { q: 'Wie sollen Plankosten festgelegt werden?', o: ['idealistisch', 'realistisch', 'pauschal aus dem Vorjahr', 'möglichst niedrig'], a: 1, w: 'Kosten bei ordentlicher und wirtschaftlicher Leistungserstellung.' },
+      { q: 'Was ist die Schwäche der flexiblen Plankostenrechnung auf Vollkostenbasis?', o: ['Keine Verbrauchsabweichung', 'Keine Entscheidungsinformationen, weil Fixkosten proportionalisiert werden', 'Keine Sollkosten', 'Keine Trennung in fix und variabel'], a: 1, w: 'Für dispositive Aufgaben ist sie ungeeignet.' },
+      { q: 'Was beschreibt die rollierende Planung als Vorteil?', o: ['Weniger aktuelle Daten', 'Aktuellere Daten und Detaillierung passend zum Zeithorizont', 'Planung nur einmal im Jahr', 'Wegfall jeder Kontrolle'], a: 1, w: 'Nächstes Quartal genau, die folgenden überschlägig.' }
+    ],
+    risiko: [
+      { q: 'Wie definiert das Skript Risiko?', o: ['Wahrscheinlichkeit eines Verlusts', 'Unsicherheit der Realisation einer Größe in Abhängigkeit künftiger Umweltzustände', 'Summe aller Schäden', 'Abweichung vom Budget'], a: 1, w: 'Risiko kann damit auch positiv ausfallen.' },
+      { q: 'Wie verhält sich jemand, der Risiko negativ beurteilt?', o: ['risikofreudig', 'risikoneutral', 'risikoavers', 'risikoindifferent'], a: 2, w: 'Wer Risiko nicht berücksichtigt, ist risikoneutral.' },
+      { q: 'Was gehört nicht zum Risikomanagement laut Definition?', o: ['Identifikation', 'Bewertung', 'Steuerung', 'Maximierung der Risiken'], a: 3, w: 'Identifikation, Analyse, Bewertung, Steuerung und Überwachung.' },
+      { q: 'Fehlprognose der Marktentwicklung führt zu falschem Produktportfolio. Welche Kategorie?', o: ['Marktrisiko', 'Unternehmensstrategisches Risiko', 'Operatives Risiko', 'Rechtliches Risiko'], a: 1, w: 'Falsch abgeleitete Strategie- oder Portfolioentscheidungen.' },
+      { q: 'Ein wichtiger Zulieferer fällt aus. Welche Kategorie?', o: ['Operatives Risiko', 'Finanzielles Risiko', 'Managementrisiko', 'Rechtliches Risiko'], a: 0, w: 'Dazu zählen auch technische Produktionsrisiken und Qualitätsrisiken.' },
+      { q: 'Neue Anbieter drängen in den Markt. Welche Kategorie?', o: ['Marktrisiko', 'Operatives Risiko', 'Finanzielles Risiko', 'Unternehmensstrategisches Risiko'], a: 0, w: 'Konjunkturelle und branchentypische Risiken.' },
+      { q: 'Managementsysteme oder einzelne Führungspersonen versagen. Welche Kategorie?', o: ['Marktrisiko', 'Managementrisiko', 'Rechtliches Risiko', 'Finanzielles Risiko'], a: 1, w: 'Versagen von Systemen, Personen oder Strukturen.' },
+      { q: 'Ein Unternehmen legt Verlustobergrenzen fest. Welche Strategie?', o: ['Risikovermeidung', 'Risikobegrenzung', 'Risikoüberwälzung', 'Risikoakzeptanz'], a: 1, w: 'Risikolimitierung oder Diversifikation.' },
+      { q: 'Ein Risiko wird bewusst getragen, weil Gegenmaßnahmen zu teuer wären. Welche Strategie?', o: ['Risikoakzeptanz', 'Risikoverminderung', 'Risikovermeidung', 'Risikoüberwälzung'], a: 0, w: 'Auch wenn die Auswirkung auf das Ergebnis geringfügig ist.' },
+      { q: 'Was enthält ein Risk Tracking Sheet?', o: ['Nur die Bilanz', 'Chancen und Risiken mit Wahrscheinlichkeit, finanzieller Auswirkung und Verantwortlichkeit', 'Nur die Kursentwicklung', 'Die Personalplanung'], a: 1, w: 'Es setzt die C/R-Berichterstattung im Controlling um.' },
+      { q: 'Was ist das Ergebnis der Risikoaggregation?', o: ['Liste der Einzelrisiken', 'Gesamtrisikoposition', 'Versicherungsvertrag', 'Risikostrategie'], a: 1, w: 'Einzelrisiken reichen nicht, sie müssen zusammengefasst werden.' },
+      { q: 'Was ist die Intention der risikoorientierten Berichterstattung?', o: ['Steuern sparen', 'Verbesserung der Corporate Governance', 'Höhere Dividenden', 'Ersatz des Lageberichts'], a: 1, w: 'Zentraler Inhalt: ein Risikomanagementsystem als Frühwarnsystem.' },
+      { q: 'Was ist das grundsätzliche unternehmerische Ziel beim Umgang mit Risiko?', o: ['Alle Risiken vermeiden', 'Risiken senken und erwartete Zahlungen erhöhen', 'Risiken maximieren', 'Nur Finanzrisiken betrachten'], a: 1, w: 'Risiko ist nur ein Teil der Abwägung.' },
+      { q: 'Welche vier Gruppen bilden die Risk Map von Adidas?', o: ['Strategische, operative, rechtliche und Compliance- sowie Finanzrisiken', 'Markt-, Personal-, IT- und Umweltrisiken', 'Kurz-, mittel-, langfristige und Dauerrisiken', 'Interne und externe Risiken'], a: 0, w: 'Jedes Risiko wird nach Auswirkung und Wahrscheinlichkeit eingeordnet.' }
+    ],
+    esg: [
+      { q: 'Was meint Inter-Generationengerechtigkeit im Brundtland-Report?', o: ['Gerechtigkeit innerhalb der heutigen Generation', 'Künftige Generationen sollen ihre Bedürfnisse ebenfalls befriedigen können', 'Gleiche Löhne für alle Altersgruppen', 'Rentengerechtigkeit'], a: 1, w: 'Die Bedürfnisse der heutigen Generation betreffen die Intra-Generationengerechtigkeit.' },
+      { q: 'Wie viele Ziele umfassen die Sustainable Development Goals?', o: ['8', '17', '169', '6'], a: 1, w: '17 Ziele mit 169 Zielvorgaben, Fahrplan bis 2030.' },
+      { q: 'Was markiert der Erdüberlastungstag?', o: ['Den heißesten Tag des Jahres', 'Den Tag, an dem die Menschheit die Ressourcen eines Jahres verbraucht hat', 'Den Tag der UN-Klimakonferenz', 'Den Stichtag für die CSRD'], a: 1, w: 'Earth Overshoot Day.' },
+      { q: 'Was bedeutet „Netto-Null“ im Green Deal?', o: ['Ab 2050 gibt es keine Emissionen mehr', 'Verbleibende Emissionen werden durch Reduktionsmaßnahmen wieder aus der Atmosphäre entfernt', 'Emissionen werden halbiert', 'Nur die Industrie muss emissionsfrei sein'], a: 1, w: 'Ziel ist ein klimaneutraler Kontinent bis 2050.' },
+      { q: 'Welche zwei Unterziele hat der European Green Deal?', o: ['Finanzierung der Transformation und „No one left behind“', 'Steuersenkung und Deregulierung', 'Atomausstieg und Kohleausstieg', 'Exportförderung und Zölle'], a: 0, w: 'Gerechte und integrative Transformation, finanziert über den Sustainable Finance Action Plan.' },
+      { q: 'Wofür steht das G in ESG?', o: ['Growth', 'Green', 'Governance', 'Goodwill'], a: 2, w: 'Environment, Social, Governance.' },
+      { q: 'Was ist kein Umweltziel der EU-Taxonomie?', o: ['Schutz des Klimas', 'Übergang zu einer Kreislaufwirtschaft', 'Schutz der Ökosysteme und der biologischen Vielfalt', 'Senkung der Lohnnebenkosten'], a: 3, w: 'Es gibt sechs Umweltziele, alle ökologisch.' },
+      { q: 'Wie wird die CSDDD auch genannt?', o: ['EU-Lieferkettengesetz', 'EU-Taxonomie', 'Klimaschutzgesetz', 'Corporate Governance Kodex'], a: 0, w: 'Menschenrechte und Umweltstandards entlang der Wertschöpfungskette.' },
+      { q: 'Wer überwacht die Nachhaltigkeitsberichterstattung kapitalmarktorientierter Unternehmen?', o: ['Das Umweltbundesamt', 'Die BaFin im Rahmen der Bilanzkontrolle', 'Die EZB', 'Der Aufsichtsrat allein'], a: 1, w: 'Soweit der Bericht Teil des Lageberichts ist.' },
+      { q: 'Was ist Corporate Governance?', o: ['Ein Steuerverfahren', 'Der rechtliche und faktische Ordnungsrahmen für Leitung und Überwachung eines Unternehmens', 'Ein Bilanzierungsstandard', 'Eine Form der Budgetierung'], a: 1, w: 'Der Deutsche Corporate Governance Kodex konkretisiert ihn für Vorstand und Aufsichtsrat.' },
+      { q: 'Was soll der Vorstand laut Kodex zu Nachhaltigkeit tun?', o: ['Nichts, das ist Aufgabe des Aufsichtsrats', 'Sozial- und Umweltrisiken und -auswirkungen systematisch identifizieren und bewerten', 'Nur die Gewinne maximieren', 'Die ESRS selbst schreiben'], a: 1, w: 'Die Unternehmensplanung soll finanzielle und nachhaltigkeitsbezogene Ziele enthalten.' },
+      { q: 'Welches Ziel nennt das deutsche Klimaschutzgesetz für 2040?', o: ['−55 %', '−65 %', 'mindestens −88 %', 'Klimaneutralität'], a: 2, w: 'Jeweils gegenüber 1990. Neutralität ist für 2045 vorgesehen.' },
+      { q: 'Ab wann sollen die vereinfachten ESRS grundsätzlich angewendet werden?', o: ['Geschäftsjahre ab 2025', 'Geschäftsjahre ab 2027', 'Geschäftsjahre ab 2030', 'Ab 2050'], a: 1, w: 'Die Kommission hat die überarbeiteten Standards im Sommer 2026 verabschiedet.' },
+      { q: 'Was zeigt das 3-Kreise-Modell der Nachhaltigkeit?', o: ['Ökologie als Grundlage aller anderen Dimensionen', 'Drei gleichrangige Dimensionen: Ökologie, Soziales, Ökonomie', 'Nur die ökonomische Dimension', 'Die drei Berichtspflichten der CSRD'], a: 1, w: 'Triple Bottom Line, steht für schwache Nachhaltigkeit.' }
+    ]
+  };
+
   function renderQuiz(el) {
     var key = el.dataset.quiz, list = QUIZ[key]; if (!list) return;
     list.forEach(function (q, i) {
@@ -402,12 +577,14 @@
   function progress() {
     var total = 0, done = 0;
     $$('.view').forEach(function (v) {
+      if (v.id === 'mc') return;
       var t = 0, d = 0;
       $$('.ex[data-ex]', v).forEach(function (e) { t++; if ((state.ex[e.dataset.ex] || {}).done) d++; });
       $$('.quiz', v).forEach(function (qz) { (QUIZ[qz.dataset.quiz] || []).forEach(function (q, i) { t++; if (state.quiz[qz.dataset.quiz + '-' + i]) d++; }); });
       total += t; done += d;
       var c = $('.nav a[href="#' + v.id + '"] .cnt'); if (c && t) { c.textContent = d + '/' + t; c.classList.toggle('full', d === t); }
     });
+    if (MC_POOL && MC_POOL.length) { var mcs = MC_POOL.filter(function (p) { return mcSure(p.id); }).length, mcc = $('.nav a[href="#mc"] .cnt'); if (mcc) { mcc.textContent = mcs + '/' + MC_POOL.length; mcc.classList.toggle('full', mcs === MC_POOL.length); } }
     var pct = total ? Math.round(done / total * 100) : 0;
     $$('[data-prog-bar]').forEach(function (b) { b.style.width = pct + '%'; });
     $$('[data-prog-txt]').forEach(function (b) { b.textContent = done + ' von ' + total; });
@@ -498,7 +675,7 @@
   ['pk-kf', 'pk-kv', 'pk-xp', 'pk-xi', 'pk-ist'].forEach(function (id) { var e = document.getElementById(id); if (e) e.addEventListener('input', drawPK); });
   drawBE(); drawPK(); startView(); progress();
   var rs = document.getElementById('reset-all');
-  if (rs) rs.addEventListener('click', function () { if (rs.dataset.armed) { state = { ex: {}, quiz: {}, plan: {} }; save(); location.reload(); } else { rs.dataset.armed = '1'; rs.textContent = 'Wirklich alles löschen? Noch einmal klicken.'; } });
+  if (rs) rs.addEventListener('click', function () { if (rs.dataset.armed) { state = { ex: {}, quiz: {}, plan: {}, mcw: {} }; save(); location.reload(); } else { rs.dataset.armed = '1'; rs.textContent = 'Wirklich alles löschen? Noch einmal klicken.'; } });
   /* ---------- Formelkarten: Symbol und Legende gemeinsam hervorheben ---------- */
   var fxPinned = null;
   function fxMark(card, key) {
@@ -697,6 +874,122 @@
     window.addEventListener('resize', function () { if (!srPanel.hidden) placePanel(); });
     window.addEventListener('scroll', function () { if (!srPanel.hidden) placePanel(); }, true);
     window.addEventListener('hashchange', function () { setTimeout(applyHighlight, 20); });
+  }
+
+  /* ---------- Seite Multiple Choice ---------- */
+  var MC_CH = [['controlling', 'Controlling'], ['rechnungswesen', 'Rechnungswesen'], ['kosten', 'Kostenrechnung'], ['kapitalfluss', 'Kapitalflussrechnung'], ['kennzahlen', 'Kennzahlen'], ['bewertung', 'Unternehmensbewertung'], ['planung', 'Planung und Budget'], ['risiko', 'Risikomanagement'], ['esg', 'ESG']];
+  var MC_POOL = [];
+  MC_CH.forEach(function (c, ci) {
+    (QUIZ[c[0]] || []).forEach(function (q, i) { MC_POOL.push({ id: c[0] + '-' + i, ch: c[0], ci: ci, q: q, src: 'Kapitel' }); });
+    (QUIZ_MC[c[0]] || []).forEach(function (q, i) { MC_POOL.push({ id: 'mc-' + c[0] + '-' + i, ch: c[0], ci: ci, q: q, src: 'neu' }); });
+  });
+  var mcSel = {}, mcRun = null;
+  MC_CH.forEach(function (c) { mcSel[c[0]] = true; });
+  function mcSure(id) { return !!state.quiz[id] && !state.mcw[id]; }
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function mcChips() {
+    var box = $('#mc-chips'); if (!box) return;
+    var all = MC_CH.every(function (c) { return mcSel[c[0]]; });
+    var html = '<button type="button" class="mc-chip" data-ch="*" aria-pressed="' + all + '">Alle Kapitel</button>';
+    MC_CH.forEach(function (c, ci) {
+      var n = MC_POOL.filter(function (p) { return p.ch === c[0]; }).length;
+      html += '<button type="button" class="mc-chip" data-ch="' + c[0] + '" aria-pressed="' + (mcSel[c[0]] && !all) + '">' + (ci + 1) + ' ' + c[1] + ' <span>' + n + '</span></button>';
+    });
+    box.innerHTML = html;
+  }
+  function mcStart(only) {
+    var filt = $('#mc-filter').value, order = $('#mc-order').value;
+    var items = MC_POOL.filter(function (p) {
+      if (only) return only.indexOf(p.id) >= 0;
+      if (!mcSel[p.ch]) return false;
+      if (filt === 'open') return !mcSure(p.id);
+      if (filt === 'wrong') return !!state.mcw[p.id];
+      return true;
+    });
+    if (order === 'mix') shuffle(items);
+    mcRun = { items: items.map(function (p) { return { p: p, perm: shuffle(p.q.o.map(function (_, i) { return i; })), pick: null }; }), retry: !!only };
+    mcRender();
+  }
+  function mcRender() {
+    var list = $('#mc-list'); list.innerHTML = '';
+    if (!mcRun.items.length) {
+      var f = $('#mc-filter').value;
+      list.innerHTML = '<li class="mc-empty">' + (f === 'wrong' ? 'Keine Frage ist zuletzt falsch beantwortet worden. Stell den Filter auf „alle“ oder „noch nicht sicher“.' : f === 'open' ? 'In den gewählten Kapiteln sitzt jede Frage. Stell den Filter auf „alle“, um trotzdem zu üben.' : 'Wähle mindestens ein Kapitel aus.') + '</li>';
+    }
+    mcRun.items.forEach(function (it, n) {
+      var p = it.p, li = h('li', 'mc-q'); li.id = 'mcq-' + n;
+      li.appendChild(h('div', 'mc-meta', '<span>' + (n + 1) + ' / ' + mcRun.items.length + '</span><span class="mc-tag">' + (p.ci + 1) + ' ' + MC_CH[p.ci][1] + '</span>'));
+      li.appendChild(h('p', 'mc-text', p.q.q));
+      var opts = h('div', 'mc-opts-list'), why = h('p', 'mc-why'); why.hidden = true; why.setAttribute('aria-live', 'polite');
+      it.perm.forEach(function (oi, k) {
+        var b = h('button', 'mc-o', '<b>' + 'ABCD'.charAt(k) + '</b><span>' + p.q.o[oi] + '</span>'); b.type = 'button'; b.dataset.oi = oi;
+        b.addEventListener('click', function () { mcAnswer(it, oi, opts, why, li); });
+        opts.appendChild(b);
+      });
+      li.appendChild(opts); li.appendChild(why); list.appendChild(li);
+    });
+    $('#mc-end').hidden = true;
+    mcScore();
+  }
+  function mcAnswer(it, oi, opts, why, li) {
+    if (it.pick !== null) return;
+    it.pick = oi;
+    var q = it.p.q, right = oi === q.a;
+    $$('.mc-o', opts).forEach(function (b) {
+      var o = +b.dataset.oi; b.disabled = true;
+      if (o === q.a) b.classList.add('ok');
+      else if (o === oi) b.classList.add('bad');
+    });
+    li.classList.add(right ? 'is-ok' : 'is-bad');
+    why.hidden = false;
+    why.innerHTML = right ? '<strong>Richtig.</strong> ' + q.w : '<strong>Falsch.</strong> Richtig ist: ' + q.o[q.a] + '. ' + q.w;
+    if (right) { state.quiz[it.p.id] = 1; delete state.mcw[it.p.id]; } else state.mcw[it.p.id] = 1;
+    save(); progress(); mcScore();
+  }
+  function mcScore() {
+    var its = mcRun.items, done = its.filter(function (i) { return i.pick !== null; }), ok = done.filter(function (i) { return i.pick === i.p.q.a; });
+    var sure = MC_POOL.filter(function (p) { return mcSure(p.id); }).length;
+    var pct = done.length ? Math.round(ok.length / done.length * 100) : 0;
+    $('#mc-score').innerHTML =
+      '<div class="mc-s"><span class="k">' + (mcRun.retry ? 'Wiederholung' : 'Dieser Durchgang') + '</span><span class="v">' + done.length + ' / ' + its.length + '</span><span class="s">beantwortet</span></div>' +
+      '<div class="mc-s"><span class="k">Richtig</span><span class="v">' + ok.length + '</span><span class="s">' + (done.length ? pct + ' % der beantworteten' : 'noch keine Antwort') + '</span></div>' +
+      '<div class="mc-s"><span class="k">Sicher insgesamt</span><span class="v">' + sure + ' / ' + MC_POOL.length + '</span><span class="s">zuletzt richtig beantwortet</span></div>' +
+      '<div class="mc-bar-line" aria-hidden="true"><i class="ok" style="width:' + (its.length ? ok.length / its.length * 100 : 0) + '%"></i><i class="bad" style="width:' + (its.length ? (done.length - ok.length) / its.length * 100 : 0) + '%"></i></div>';
+    var end = $('#mc-end');
+    if (its.length && done.length === its.length) {
+      var wrong = done.filter(function (i) { return i.pick !== i.p.q.a; }).map(function (i) { return i.p.id; });
+      end.hidden = false;
+      end.innerHTML = '<p><strong>Durchgang beendet: ' + ok.length + ' von ' + its.length + ' richtig (' + pct + ' %).</strong> ' +
+        (wrong.length ? 'Wiederhole jetzt die ' + wrong.length + ' falsch beantworteten Fragen, solange sie frisch sind.' : 'Alles richtig. Nimm dir als Nächstes andere Kapitel oder die gemischte Reihenfolge vor.') + '</p>' +
+        '<div class="mc-end-b">' + (wrong.length ? '<button type="button" id="mc-retry">Nur die ' + wrong.length + ' falschen wiederholen</button>' : '') + '<button type="button" class="ghost" id="mc-again">Neuer Durchgang</button></div>';
+      if (wrong.length) $('#mc-retry').addEventListener('click', function () { mcStart(wrong); $('#mc').scrollIntoView(); });
+      $('#mc-again').addEventListener('click', function () { mcStart(); $('#mc').scrollIntoView(); });
+    } else end.hidden = true;
+    mcMastery();
+  }
+  function mcMastery() {
+    var box = $('#mc-mastery'); if (!box) return;
+    box.innerHTML = '<table class="tight mc-mt"><thead><tr><th>Kapitel</th><th class="n">sicher</th><th class="n">zuletzt falsch</th><th>Anteil sicher</th></tr></thead><tbody>' + MC_CH.map(function (c, ci) {
+      var ps = MC_POOL.filter(function (p) { return p.ch === c[0]; }), s = ps.filter(function (p) { return mcSure(p.id); }).length, w = ps.filter(function (p) { return state.mcw[p.id]; }).length;
+      return '<tr><td>' + (ci + 1) + ' ' + c[1] + '</td><td class="n">' + s + ' / ' + ps.length + '</td><td class="n">' + w + '</td><td><span class="mc-mbar"><i style="width:' + Math.round(s / ps.length * 100) + '%"></i></span></td></tr>';
+    }).join('') + '</tbody></table>';
+  }
+  if ($('#mc')) {
+    $$('[data-mc-total]').forEach(function (e) { e.textContent = MC_POOL.length; });
+    mcChips();
+    $('#mc-chips').addEventListener('click', function (e) {
+      var b = e.target.closest('.mc-chip'); if (!b) return;
+      var ch = b.dataset.ch, all = MC_CH.every(function (c) { return mcSel[c[0]]; });
+      if (ch === '*') MC_CH.forEach(function (c) { mcSel[c[0]] = true; });
+      else if (all) { MC_CH.forEach(function (c) { mcSel[c[0]] = c[0] === ch; }); }
+      else { mcSel[ch] = !mcSel[ch]; if (!MC_CH.some(function (c) { return mcSel[c[0]]; })) MC_CH.forEach(function (c) { mcSel[c[0]] = true; }); }
+      mcChips(); mcStart();
+    });
+    $('#mc-order').addEventListener('change', function () { mcStart(); });
+    $('#mc-filter').addEventListener('change', function () { mcStart(); });
+    $('#mc-new').addEventListener('click', function () { mcStart(); });
+    mcStart();
+    progress();
   }
 
   window.addEventListener('hashchange', route);

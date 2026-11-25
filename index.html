@@ -38,6 +38,7 @@
       <li><a href="#risiko"><span class="no">8</span>Risikomanagement<span class="cnt"></span></a></li>
       <li><a href="#esg"><span class="no">9</span>ESG<span class="cnt"></span></a></li>
       <li class="nav-h">Training</li>
+      <li><a href="#mc"><span class="no">M</span>Multiple Choice<span class="cnt"></span></a></li>
       <li><a href="#probeklausur"><span class="no">P</span>Probeklausur<span class="cnt"></span></a></li>
       <li><a href="#trainer"><span class="no">T</span>Trainer: neue Zahlen</a></li>
       <li><a href="#formeln"><span class="no">F</span>Formelsammlung</a></li>
@@ -55,7 +56,7 @@
   <div class="tiles">
     <div class="tile"><div class="k">Klausur</div><div class="v" id="days">–</div><div class="s" id="days-sub">Tage bis zum 30.11.2026</div></div>
     <div class="tile"><div class="k">Fortschritt</div><div class="v" data-prog-pct>0 %</div><div class="s"><span data-prog-txt>0 von 0</span> Aufgaben und Fragen gelöst</div></div>
-    <div class="tile"><div class="k">Material</div><div class="v">25 + 7</div><div class="s">Rechenaufgaben aus den Übungsblättern, dazu 7 Trainer mit immer neuen Zahlen und 56 Verständnisfragen</div></div>
+    <div class="tile"><div class="k">Material</div><div class="v">25 + 7</div><div class="s">Rechenaufgaben aus den Übungsblättern, dazu 7 Trainer mit immer neuen Zahlen und <span data-mc-total>200</span> Multiple-Choice-Fragen</div></div>
   </div>
 
   <h2>So arbeitest du mit der Seite</h2>
@@ -94,10 +95,10 @@
       <tr><td>Mo 23.11.</td><td><a href="#bewertung">Unternehmensbewertung</a></td><td>BITA GmbH, Aufgabe 10 (WACC), Quiz Kap. 6</td><td><input type="checkbox" id="plan-7" aria-label="Montag 23.11. erledigt"></td></tr>
       <tr><td>Di 24.11.</td><td><a href="#planung">Plankostenrechnung, Abweichungen</a></td><td>Einstiegsaufgabe, Drink Til You Drop AG</td><td><input type="checkbox" id="plan-8" aria-label="Dienstag 24.11. erledigt"></td></tr>
       <tr><td>Mi 25.11.</td><td><a href="#planung">Budgetierung</a></td><td>Bicycle AG, Quiz Kap. 7</td><td><input type="checkbox" id="plan-9" aria-label="Mittwoch 25.11. erledigt"></td></tr>
-      <tr><td>Do 26.11.</td><td><a href="#risiko">Risikomanagement</a>, <a href="#esg">ESG</a>, offene Theoriefragen</td><td>Quiz Kap. 8 und 9, Theoriefragen in der <a href="#probeklausur">Probeklausur</a></td><td><input type="checkbox" id="plan-10" aria-label="Donnerstag 26.11. erledigt"></td></tr>
+      <tr><td>Do 26.11.</td><td><a href="#risiko">Risikomanagement</a>, <a href="#esg">ESG</a>, offene Theoriefragen</td><td><a href="#mc">Multiple Choice</a> Kap. 8 und 9, Theoriefragen in der <a href="#probeklausur">Probeklausur</a></td><td><input type="checkbox" id="plan-10" aria-label="Donnerstag 26.11. erledigt"></td></tr>
       <tr><td>Fr 27.11.</td><td><a href="#probeklausur">Probeklausur</a> mit Uhr</td><td>Zusatzaufgaben 1 und 2 in 35 Minuten, danach Lücken notieren</td><td><input type="checkbox" id="plan-11" aria-label="Freitag 27.11. erledigt"></td></tr>
-      <tr><td>Sa 28.11.</td><td><a href="#trainer">Trainer</a></td><td>Je zwei Durchgänge WACC, EVA, Cashflow, Break-even, Plankosten, ohne Lösungsweg</td><td><input type="checkbox" id="plan-12" aria-label="Samstag 28.11. erledigt"></td></tr>
-      <tr><td>So 29.11.</td><td><a href="#formeln">Formelsammlung</a>, rote Aufgaben</td><td>Alles wiederholen, was noch nicht „gelöst“ zeigt. Früh aufhören.</td><td><input type="checkbox" id="plan-13" aria-label="Sonntag 29.11. erledigt"></td></tr>
+      <tr><td>Sa 28.11.</td><td><a href="#trainer">Trainer</a></td><td>Je zwei Durchgänge WACC, EVA, Cashflow, Break-even, Plankosten, ohne Lösungsweg. Danach <a href="#mc">Multiple Choice</a> gemischt über alle Kapitel</td><td><input type="checkbox" id="plan-12" aria-label="Samstag 28.11. erledigt"></td></tr>
+      <tr><td>So 29.11.</td><td><a href="#formeln">Formelsammlung</a>, rote Aufgaben</td><td>Alles wiederholen, was noch nicht „gelöst“ zeigt, im <a href="#mc">Multiple Choice</a> den Filter „zuletzt falsch“. Früh aufhören.</td><td><input type="checkbox" id="plan-13" aria-label="Sonntag 29.11. erledigt"></td></tr>
       <tr><td>Mo 30.11.</td><td><strong>Klausur</strong></td><td>Nur noch die Formelsammlung überfliegen</td><td><input type="checkbox" id="plan-14" aria-label="Montag 30.11. erledigt"></td></tr>
     </tbody>
   </table></div>
@@ -113,6 +114,7 @@
     <a href="#planung"><b>7 Planung und Budget</b><span>Plankostenrechnung, Abweichungsanalyse, Budgetierung</span></a>
     <a href="#risiko"><b>8 Risikomanagement</b><span>Kategorien, Kreislauf, Risk Map, Steuerung</span></a>
     <a href="#esg"><b>9 ESG</b><span>Green Deal, CSRD, ESRS, Taxonomie, Kodex. Dazu der Ausblick</span></a>
+    <a href="#mc"><b>Multiple Choice</b><span>Alle Verständnisfragen auf einer Seite, nach Kapiteln filterbar oder gemischt</span></a>
     <a href="#probeklausur"><b>Probeklausur</b><span>Zusatzaufgaben im Klausurformat und offene Theoriefragen</span></a>
   </div>
 
@@ -2110,7 +2112,36 @@
     </ul>
   </details>
 
-  <div class="next"><a href="#risiko">← Risikomanagement</a><a href="#probeklausur">Weiter: Probeklausur →</a></div>
+  <div class="next"><a href="#risiko">← Risikomanagement</a><a href="#mc">Weiter: Multiple Choice →</a></div>
+</section>
+
+<!-- ===================== MULTIPLE CHOICE ===================== -->
+<section class="view" id="mc">
+  <p class="eyebrow">Training · Fragen zu allen Skripten</p>
+  <h1>Multiple Choice</h1>
+  <p class="lead">Alle Verständnisfragen auf einer Seite: die aus den Kapiteln und viele zusätzliche zu allen Skripten. Wähle Kapitel aus, misch die Reihenfolge und wiederhole am Ende gezielt, was falsch war.</p>
+  <p class="note">Pro Frage zählt der erste Klick. Danach siehst du die richtige Antwort und die Begründung. Die Antwortmöglichkeiten erscheinen in jedem Durchgang in neuer Reihenfolge, damit du dir nicht die Position merkst.</p>
+
+  <div class="mc-bar">
+    <div class="mc-chips" id="mc-chips" role="group" aria-label="Kapitel auswählen"></div>
+    <div class="mc-opts">
+      <label for="mc-order">Reihenfolge
+        <select id="mc-order"><option value="kap">nach Kapiteln</option><option value="mix">gemischt</option></select>
+      </label>
+      <label for="mc-filter">Fragen
+        <select id="mc-filter"><option value="all">alle</option><option value="open">noch nicht sicher</option><option value="wrong">zuletzt falsch beantwortet</option></select>
+      </label>
+      <button type="button" id="mc-new">Neuer Durchgang</button>
+    </div>
+  </div>
+
+  <div class="mc-score" id="mc-score" aria-live="polite"></div>
+  <ol class="mc-list" id="mc-list"></ol>
+  <div class="mc-end" id="mc-end" hidden></div>
+
+  <details class="rev mc-stand"><summary>Stand je Kapitel</summary><div id="mc-mastery"></div></details>
+
+  <div class="next"><a href="#esg">← ESG</a><a href="#probeklausur">Weiter: Probeklausur →</a></div>
 </section>
 
 <!-- ===================== PROBEKLAUSUR ===================== -->
@@ -2211,7 +2242,7 @@
   <details class="rev"><summary>12. Nenne die Strategien der Risikosteuerung.</summary><p>Risikovermeidung (keine existenzbedrohenden Geschäfte), Risikoverminderung (aktive Gegensteuerung), Risikobegrenzung (Diversifikation oder Limite), Risikoüberwälzung (Gegengeschäft, Hedge), Risikoakzeptanz (kein Gegensteuern, weil der Aufwand unverhältnismäßig oder die Auswirkung gering ist). <a href="#risiko">Kapitel 8</a></p></details>
   <details class="rev"><summary>13. Wie hängen Green Deal, CSRD, ESRS und ESG zusammen?</summary><p>Der EU Green Deal ist das politische Ziel (Klimaneutralität bis 2050) und beantwortet das Warum. Die CSRD legt fest, wer berichten muss: große Unternehmen mit mehr als 1.000 Beschäftigten und mehr als 450 Mio. € Nettoumsatz. Die ESRS regeln, wie berichtet wird. ESG (Environment, Social, Governance) beschreibt, worüber berichtet wird. <a href="#esg">Kapitel 9</a></p></details>
 
-  <div class="next"><a href="#esg">← ESG</a><a href="#trainer">Weiter: Trainer →</a></div>
+  <div class="next"><a href="#mc">← Multiple Choice</a><a href="#trainer">Weiter: Trainer →</a></div>
 </section>
 
 <!-- ===================== TRAINER ===================== -->
